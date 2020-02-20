@@ -1,11 +1,11 @@
 #!/bin/bash
 
-
 # Author - Eric Kong
 # Date - 2/19/20
 # ABE 651 Lab 5 
 # A script that processes the StationData subdirectory
 
+module load gmt
 
 # Part 1: Identify and separate out high elevation 
 
@@ -21,12 +21,22 @@ fi
 # checking for stations with >200 elevation and copying them to a different directory
 for data_set in StationData/* # from assignment text
 do 
-	in_the_clouds=`basename "$data_set"` # basename function to extract only the file name
-	if
-	ack -B 3 'Altitude: [>200]' $data_set # search file and display lines 
-	then cp StationData/$in_the_clouds HigherElevation/$in_the_clouds
-	fi
+    in_the_clouds=`basename "$data_set"` # basename function to extract only the file name
+    if
+    ack -B 3 'Altitude: [>200]' $data_set # search file and display lines 
+    then cp StationData/$in_the_clouds HigherElevation/$in_the_clouds
+    fi
 done
 
 # Part 2: Plot locations of all stations and highlight higher elevation
+# StationData subdirectory - longitude and latitude
 
+awk '/Longitude/ {print -1 * $NF}' StationData/*.txt > Long.list # negative longitude because west of Prime Meridian
+awk '/Latitude/ {print $NF}' StationData/*.txt > Lat.list
+paste Long.list Lat.list > AllStation.xy
+
+# HigherElevation subdirectory - longitude and latitude
+
+awk '/Longitude/ {print -1 * $NF}' HigherElevation/*.txt > HELong.list # negative longitude because west of Prime Meridian
+awk '/Latitude/ {print $NF}' HigherElevation/*.txt > HELat.list
+paste HELong.list HELat.list > HEStations.xy
