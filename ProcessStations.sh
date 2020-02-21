@@ -39,4 +39,14 @@ paste Long.list Lat.list > AllStation.xy
 
 awk '/Longitude/ {print -1 * $NF}' HigherElevation/*.txt > HELong.list # negative longitude because west of Prime Meridian
 awk '/Latitude/ {print $NF}' HigherElevation/*.txt > HELat.list
-paste HELong.list HELat.list > HEStations.xy
+paste HELong.list HELat.list > HEStation.xy
+
+# Using GMT to make a plot and view the figure
+gmt pscoast -JU16/4i -R-93/-86/36/43 -A -B2f0.5 -Cblue -Dh -Ia/blue -Na/orange -P -K -V > SoilMoistureStations.ps # high res rivers, coastline, and political boundaries
+gmt psxy AllStation.xy -J -R -Sc0.15 -Gblack -K -O -V >> SoilMoistureStations.ps # black circles for all stations
+gmt psxy HEStation.xy -J -R -Sc0.05 -Gred -O -V >> SoilMoistureStations.ps # smaller red circles for high elevation stations
+gv SoilMoistureStations.ps &
+
+# Part 3: convert figure into other image formats
+ps2epsi SoilMoistureStations.ps
+convert -density 150x150 SoilMoistureStations.epsi SoilMoistureStations.tiff
