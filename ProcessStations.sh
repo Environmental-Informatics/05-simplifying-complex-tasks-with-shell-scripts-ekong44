@@ -5,6 +5,8 @@
 # ABE 651 Lab 5 
 # A script that processes the StationData subdirectory
 
+# purge modules such as anaconda before loading gmt
+module purge 
 module load gmt
 
 # Part 1: Identify and separate out high elevation 
@@ -48,5 +50,6 @@ gmt psxy HEStation.xy -J -R -Sc0.05 -Gred -O -V >> SoilMoistureStations.ps # sma
 gv SoilMoistureStations.ps &
 
 # Part 3: convert figure into other image formats
-ps2epsi SoilMoistureStations.ps
+ps2epsi SoilMoistureStations.ps SoilMoistureStations.epsi
+gv SoilMoistureStations.epsi &
 convert -density 150x150 SoilMoistureStations.epsi SoilMoistureStations.tiff
